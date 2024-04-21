@@ -1,13 +1,15 @@
 #!/bin/bash
 
-menu="${1}"
+host="HOST"
+config=$(echo ~/.ssh/config)
+switch="${1}"
 
 function current {
-    echo $(pgrep -f "ssh -o StrictHostKeyChecking=no -N -f -D 1080 link -F /home/mohamed/.ssh/config")
+    echo $(pgrep -f "ssh -o StrictHostKeyChecking=no -N -f -D 1080 ${host} -F ${config}")
 }
 
 function start {
-    [[ $(current) == "" ]] && ssh -o StrictHostKeyChecking=no -N -f -D 1080 link -F /home/mohamed/.ssh/config
+    [[ $(current) == "" ]] && ssh -o StrictHostKeyChecking=no -N -f -D 1080 ${host} -F ${config}
 }
 
 function stop {
@@ -26,11 +28,11 @@ function restart {
     start
 }
 
-if [ "${menu}" == "start" ]; then
+if [ "${switch}" == "start" ]; then
     start
-elif [ "${menu}" == "restart" ]; then
+elif [ "${switch}" == "restart" ]; then
     restart
-elif [ "${menu}" == "stop" ]; then
+elif [ "${switch}" == "stop" ]; then
     stop
 else
     status
