@@ -1,0 +1,37 @@
+#!/bin/bash
+
+menu="${1}"
+
+function current {
+    echo $(pgrep -f "ssh -o StrictHostKeyChecking=no -N -f -D 1080 link -F /home/mohamed/.ssh/config")
+}
+
+function start {
+    [[ $(current) == "" ]] && ssh -o StrictHostKeyChecking=no -N -f -D 1080 link -F /home/mohamed/.ssh/config
+}
+
+function stop {
+    pid=$(current)
+    [[ "${pid}" == "" ]] || kill -9 "${pid}"
+}
+
+function status() {
+    pid=$(current)
+    ([[ "${pid}" == "" ]] && echo "Not Connected!") || echo "Connected - PID: ${pid}"
+}
+
+function restart {
+    stop
+    sleep 3
+    start
+}
+
+if [ "${menu}" == "start" ]; then
+    start
+elif [ "${menu}" == "restart" ]; then
+    restart
+elif [ "${menu}" == "stop" ]; then
+    stop
+else
+    status
+fi
