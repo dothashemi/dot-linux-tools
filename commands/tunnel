@@ -28,12 +28,28 @@ function restart {
     start
 }
 
+function cron {
+    state="${1}"
+    if [ "${state}" == "on" ]; then
+        echo "* * * * * tunnel start" | crontab -
+        echo "Cron gets UP!"
+    elif [ "${state}" == "off" ]; then
+        crontab -l | sed '/tunnel start/d' | crontab -
+        echo "Cron gets DOWN!"
+    else
+        exists=$(crontab -l | grep "tunnel start")
+        ([[ "${exists}" ]] && echo "UP!") || echo "DOWN!"
+    fi
+}
+
 if [ "${switch}" == "start" ]; then
     start
 elif [ "${switch}" == "restart" ]; then
     restart
 elif [ "${switch}" == "stop" ]; then
     stop
+elif [ "${switch}" == "cron" ]; then
+    cron "${2}"
 else
     status
 fi
