@@ -1,0 +1,6 @@
+#!/bin/bash
+
+[[ ${1} != "" ]] && curl -s http://ip-api.com/json/${1} | jq && exit
+
+curl -s http://ip-api.com
+
